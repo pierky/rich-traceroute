@@ -73,7 +73,7 @@ def new():
     if not traceroute.parsed:
         return render_template(
             "index.html",
-            recaptcha=ReCaptcha(3),
+            recaptcha=ReCaptcha(3) if ReCaptcha.is_used() else None,
             err_code=2,
             raw=raw
         )

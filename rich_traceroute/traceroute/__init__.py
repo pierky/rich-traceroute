@@ -5,6 +5,7 @@ import uuid
 import hashlib
 import json
 import textwrap
+import ipaddress
 
 from peewee import (
     AutoField,
@@ -278,6 +279,13 @@ class Host(BaseModel):
 
         return None
 
+    @property
+    def is_global(self) -> bool:
+        if self.ip:
+            return ipaddress.ip_address(self.ip).is_global
+        else:
+            return False
+
     def to_json(self):
         return json.dumps(self.to_dict())
 
@@ -297,6 +305,7 @@ class Host(BaseModel):
             "max_rtt": _float_or_none(self.max_rtt),
             "loss": _float_or_none(self.loss),
             "ip": str(self.ip) if self.ip else None,
+            "is_global": self.is_global,
             "name": self.name if self.name else None,
             "enriched": self.enriched,
             "ixp_network": {

@@ -142,6 +142,7 @@
 
     original_host = data["original_host"];
     ip = data["ip"];
+    is_global = data["is_global"];
     reverse = data["name"];
     loss = data["loss"];
     avg_rtt = data["avg_rtt"];
@@ -157,7 +158,11 @@
     html_ip = host_html_el(host_id, "ip");
 
     if (ip !== null) {
-      html_ip.html("<a title='See on RIPEstat' href='http://stat.ripe.net/" + ip + "' target='_blank'>" + ip + "</a>");
+      if (is_global) {
+        html_ip.html("<a title='See on RIPEstat' href='http://stat.ripe.net/" + ip + "' target='_blank'>" + ip + "</a>");
+      } else {
+        html_ip.html(ip);
+      }
     } else {
       html_ip.html(original_host);
     }
@@ -252,8 +257,6 @@
     $.ajax({
       url: "{{ url_for("traceroute.status") }}?id={{ t.id }}"
     }).done(function(data) {
-      console.log(data);
-
       if ( data["status"] == "wip" ) {
         status_checker = setTimeout(check_status, 5000);
       } else {

@@ -6,7 +6,7 @@ Flask==1.1.2
 Flask-SocketIO==5.0.1
 markus==2.2.0
 PyYAML==5.4.1
-dnspython==2.1.0
+dnspython==1.16.0 # version 2 breaks eventlet https://medium.com/@pablankley/the-eventlet-dns-bug-that-could-take-down-your-production-servers-fa873253bb40
 cachetools==4.2.1
 PyMySQL==1.0.2
 

@@ -70,7 +70,7 @@
     <!-- Begin page content -->
     <main role="main" class="container-xl">
       {% if request.url_rule.endpoint == "home.index" %}
-      <h1 class="mt-2">rich-traceroute.io</h1>
+      <h1 class="mt-2"><img style="padding-right: 10px" src="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">rich-traceroute.io</h1>
       {% else %}
-      <h1 class="mt-2"><a href="/" class="text-decoration-none">rich-traceroute.io</a></h1>
+      <h1 class="mt-2"><img style="padding-right: 10px" src="{{ url_for('static', filename='favicon/favicon-32x32.png') }}"><a href="/" class="text-decoration-none">rich-traceroute.io</a></h1>
       {% endif %}

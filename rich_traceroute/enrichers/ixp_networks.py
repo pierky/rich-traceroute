@@ -1,21 +1,19 @@
 from typing import List, Optional
-import json
 import ipaddress
 import logging
 import threading
 
-import pika
 import requests
 import markus
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
 
-from ..config import get_pika_url_parameters, IXP_NETWORKS_UPDATE_INTERVAL
+from .consumer import ConsumerThread
+from ..config import IXP_NETWORKS_UPDATE_INTERVAL
 from ..structures import IPDBInfo, IXPNetwork
 from ..ip_info_db import IPInfo_Prefix
 from ..metrics import log_execution_time, get_tags
-from .constants import IP_INFO_DATA_EXCHANGE_NAME
 
 
 PEERINGDB_API_IXPFX = "https://www.peeringdb.com/api/ixpfx"
@@ -74,9 +72,8 @@ class PeeringDB:
 
 class IXPNetworksUpdater:
 
-    def __init__(self):
-        self.connection: pika.BlockingConnection = None
-        self.ip_db_info_channel: pika.channel.Channel = None
+    def __init__(self, consumers: List[ConsumerThread] = []):
+        self.consumers = consumers
 
     @staticmethod
     def _lookup_ix_lans(ixlan_data: List[dict], ix_id: int) -> List[dict]:
@@ -98,36 +95,14 @@ class IXPNetworksUpdater:
 
         return res
 
-    def _setup_dispatcher(self) -> None:
-        self.connection = pika.BlockingConnection(
-            get_pika_url_parameters()
-        )
-        self.ip_db_info_channel = self.connection.channel()
-
-        self.ip_db_info_channel.exchange_declare(
-            exchange=IP_INFO_DATA_EXCHANGE_NAME,
-            exchange_type="fanout"
-        )
-
-    def _teardown_dispatcher(self) -> None:
-        self.ip_db_info_channel.close()
-        self.connection.close()
-
     def update_ixp_networks(self) -> None:
-        self._setup_dispatcher()
         with log_execution_time(METRICS, LOGGER, "_build_ixp_networks"):
             self._build_ixp_networks()
-        self._teardown_dispatcher()
 
     def _dispatch_ip_info(self, ip_info: IPDBInfo) -> None:
-        self.ip_db_info_channel.basic_publish(
-            exchange=IP_INFO_DATA_EXCHANGE_NAME,
-            routing_key="",
-            body=json.dumps(ip_info.to_json_dict()),
-            properties=pika.BasicProperties(
-                expiration='60000',
-            )
-        )
+        for consumer in self.consumers:
+            for enricher in consumer.enrichers:
+                enricher.add_ip_info_to_local_cache(ip_info, False)
 
     def _save_ip_info_to_db(self, ip_info: IPDBInfo) -> None:
         try:
@@ -155,6 +130,8 @@ class IXPNetworksUpdater:
         with log_execution_time(METRICS, LOGGER, "peeringdb.pdb_ix_prefixes"):
             pdb_ix_prefixes: List[dict] = pdb.query(PEERINGDB_API_IXPFX)
 
+        ix_lan_cnt = 0
+
         for ix in pdb_ix_data:
             ix_id: int = int(ix["id"])
             ix_name: Optional[str] = ix["name"] or None
@@ -163,6 +140,8 @@ class IXPNetworksUpdater:
             ix_lans = self._lookup_ix_lans(pdb_ixlan_data, ix_id)
 
             for ix_lan in ix_lans:
+                ix_lan_cnt += 1
+
                 ix_lan_id: int = int(ix_lan["id"])
                 ix_lan_name: Optional[str] = ix_lan["name"] or None
 
@@ -193,8 +172,13 @@ class IXPNetworksUpdater:
                         )
                         return
 
+                if ix_lan_cnt % 100 == 0:
+                    LOGGER.info(f"{ix_lan_cnt} IXP networks processed")
 
-def setup_ixp_networks_updater():
+        LOGGER.info(f"{ix_lan_cnt} IXP networks processed")
+
+
+def setup_ixp_networks_updater(consumers: List[ConsumerThread]):
 
     def _setup_thread(interval: int):
         global thread
@@ -205,7 +189,7 @@ def setup_ixp_networks_updater():
     def _run_updater():
         try:
             LOGGER.info("Running the IXP networks updater")
-            updater = IXPNetworksUpdater()
+            updater = IXPNetworksUpdater(consumers)
             updater.update_ixp_networks()
             LOGGER.info("IXP networks updater completed")
         except:  # noqa: E722
@@ -215,10 +199,7 @@ def setup_ixp_networks_updater():
 
         _setup_thread(IXP_NETWORKS_UPDATE_INTERVAL)
 
-    # At app setup time, run an update immediately; once
-    # the app is running, updates will be done on the
-    # basis of the regular update interval.
-    _setup_thread(1)
+    _setup_thread(IXP_NETWORKS_UPDATE_INTERVAL)
 
 
 def teardown_ixp_networks_updater() -> None:

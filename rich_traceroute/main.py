@@ -37,19 +37,18 @@ def setup_environment(mode: ConfigMode) -> List[Thread]:
 
     if mode == ConfigMode.WORKER or os.environ.get("FLASK_DEBUG", 0) == "1":
         LOGGER.info("Spinning up the workers [consumers]...")
-        res.extend(
-            setup_consumers(
-                cfg["workers"]["consumers"],
-                cfg["workers"]["enrichers"]
-            )
+        consumers = setup_consumers(
+            cfg["workers"]["consumers"],
+            cfg["workers"]["enrichers"]
         )
+        res.extend(consumers)
 
         LOGGER.info("Spinning up the workers [IP info dispatcher]...")
         res.append(setup_ipinfo_dispatcher())
 
         if os.environ.get("FLASK_DEBUG", 0) != "1":
             LOGGER.info("Spinning up the IXP Networks updater...")
-            res.append(setup_ixp_networks_updater())
+            res.append(setup_ixp_networks_updater(consumers))
 
         LOGGER.info("Spinning up the house keeper...")
         res.append(setup_housekeeper())

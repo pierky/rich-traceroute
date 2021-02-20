@@ -170,7 +170,7 @@ def metrics_setup():
 
 @pytest.fixture()
 def ixp_networks(db, rabbitmq):
-    updater = IXPNetworksUpdater()
+    updater = IXPNetworksUpdater(CONSUMER_THREADS)
     updater.update_ixp_networks()
 
     yield

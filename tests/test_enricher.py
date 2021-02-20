@@ -280,9 +280,9 @@ def test_traceroute_to_text():
   3. 10.250.139.186    14.33 ms
   4. 10.254.0.217      12.85 ms
      10.254.0.221      13.18 ms
-  5. 89.97.200.190     13.02 ms   AS12874  FASTWEB - Fastweb SpA
+  5. 89.97.200.186     11.10 ms   AS12874  FASTWEB - Fastweb SpA
+     89.97.200.190     13.02 ms   AS12874  FASTWEB - Fastweb SpA
      89.97.200.201     12.93 ms   AS12874  FASTWEB - Fastweb SpA
-     89.97.200.186     11.10 ms   AS12874  FASTWEB - Fastweb SpA
   6. 93.57.68.145      12.91 ms   AS12874  FASTWEB - Fastweb SpA
      93.57.68.149      15.66 ms   AS12874  FASTWEB - Fastweb SpA
   7. 193.201.28.33     27.09 ms                                        cloudflare-nap.namex.it

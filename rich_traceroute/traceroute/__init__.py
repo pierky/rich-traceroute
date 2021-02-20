@@ -188,7 +188,9 @@ class Traceroute(BaseModel):
 
                 continue
 
-            for host_idx, host in enumerate(hop.hosts):  # pylint: disable=no-member
+            for host_idx, host in enumerate(
+                sorted(hop.hosts, key=lambda h: h.ip or h.original_host)
+            ):  # pylint: disable=no-member
                 if host_idx == 0:
                     this_hop_txt = str(hop.hop_number) + "."
                 else:

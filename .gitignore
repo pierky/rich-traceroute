@@ -4,6 +4,7 @@ db.db
 private/
 rich_traceroute.log*
 NOTES
+mypy_report/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

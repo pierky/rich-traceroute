@@ -1,0 +1,19 @@
+pika==1.1.0
+peewee==3.14.0
+py-radix==0.10.0
+requests==2.25.1
+Flask==1.1.2
+Flask-SocketIO==5.0.1
+markus==2.2.0
+PyYAML==5.4.1
+dnspython==2.1.0
+cachetools==4.2.1
+PyMySQL==1.0.2
+
+# # pymysql/_auth.py:
+# # RuntimeError: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+# cryptography
+
+# socketio/kombu_manager.py
+# RuntimeError: Kombu package is not installed (Run "pip install kombu" in your virtualenv).
+kombu==5.0.2

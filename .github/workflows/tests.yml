@@ -1,0 +1,79 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.7
+      - uses: actions/checkout@master
+      - name: Install flake8
+        run: pip install flake8
+      - name: Run flake8
+        uses: suo/flake8-github-action@releases/v1
+        with:
+          checkName: 'flake8'
+
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GCC
+        uses: egor-tensin/setup-gcc@master
+      - name: Setup Python
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.7
+      - uses: actions/checkout@master
+      - name: Install requirements
+        run: >
+          pip3 install -r requirements.txt &&
+          pip3 install -r requirements-test.txt
+      - name: Run Mypy
+        run: mypy --show-error-codes --ignore-missing-imports rich_traceroute tests
+
+  pylint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GCC
+        uses: egor-tensin/setup-gcc@master
+      - name: Setup Python
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.7
+      - uses: actions/checkout@master
+      - name: Install requirements
+        run: >
+          pip3 install -r requirements.txt &&
+          pip3 install -r requirements-test.txt
+      - name: Run Pylint
+        run: pylint --rcfile=.pylintrc rich_traceroute tests
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GCC
+        uses: egor-tensin/setup-gcc@master
+      - name: Setup Python
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.7
+      - uses: actions/checkout@master
+      - name: Install requirements
+        run: >
+          pip3 install -r requirements.txt &&
+          pip3 install -r requirements-test.txt
+      - name: Run tests and generate coverage report
+        run: coverage run --source=rich_traceroute -m pytest -vsx
+        env:
+          RICH_TRACEROUTE_TESTS_DB_TYPE: mysql
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true

@@ -15,6 +15,5 @@ echo "Coverage & PyTest..."
 coverage run \
     --source=rich_traceroute \
     -m pytest \
-        --assert=plain \
         -vsx
 coverage report -m

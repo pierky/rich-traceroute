@@ -223,7 +223,7 @@ def test_consumers_basic():
     # equally. This is to ensure that the IP info records
     # are properly distributed across the consumers.
     for thread in CONSUMER_THREADS:
-        for enricher in thread.connection.async_connection.enrichers:
+        for enricher in thread.enrichers:
             ip_info_db = enricher.ip_info_db
 
             assert len(ip_info_db.nodes()) == 5
@@ -443,7 +443,7 @@ def test_ixp_networks_updater_integration(ixp_networks):
     # properly dispatch the IP info entries to all the
     # consumers.
     for thread in CONSUMER_THREADS:
-        for enricher in thread.connection.async_connection.enrichers:
+        for enricher in thread.enrichers:
 
             ip_info_db = enricher.ip_info_db
 

@@ -133,7 +133,7 @@ def rabbitmq():
     ipinfo_thread.stop_dispatcher()
 
     for thread in CONSUMER_THREADS:
-        thread.stop_consumer()
+        thread.stop()
 
     for thread in CONSUMER_THREADS:
         thread.join()

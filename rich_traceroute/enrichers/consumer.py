@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List
 import json
 import threading
@@ -29,14 +30,42 @@ def log_exception(function):
 
 class ConsumerAsyncConnection(AsyncConnection):
 
-    def __init__(self, consumer_thread_name: str, enrichers: int):
+    def __init__(self, consumer: ConsumerThread):
         super().__init__()
+
+        self.consumer: ConsumerThread = consumer
+
+    def _setup_channels(self):
+
+        enrichment_jobs_channel = EnrichmentJobsChannel(
+            name="enrichment_jobs_channel",
+            connection=self.connection,
+            close_connection=self.close_connection,
+            on_message=self.consumer.receive_traceroute_enrichment_job
+        )
+        self._channels.append(enrichment_jobs_channel)
+
+        ip_db_info_channel = IPDBInfoChannel(
+            name="ip_db_info_channel",
+            connection=self.connection,
+            close_connection=self.close_connection,
+            on_message=self.consumer.receive_ip_info_data
+        )
+        self._channels.append(ip_db_info_channel)
+
+
+class ConsumerThread(threading.Thread):
+
+    def __init__(self, consumer_thread_name: str, enrichers_per_consumer: int):
+        super().__init__(name=consumer_thread_name)
+
+        self.daemon = True
 
         self.enrichment_jobs_queue: queue.Queue = queue.Queue()
 
         self.enrichers: List[Enricher] = []
 
-        for n in range(enrichers):
+        for n in range(enrichers_per_consumer):
             enricher_thread = Enricher(
                 f"{consumer_thread_name}-enricher-{n}",
                 self.enrichment_jobs_queue
@@ -45,30 +74,23 @@ class ConsumerAsyncConnection(AsyncConnection):
             self.enrichers.append(enricher_thread)
             enricher_thread.start()
 
+        self.connection = Reconnector(
+            ConsumerAsyncConnection,
+            self
+        )
+
+    def run(self):
+        LOGGER.debug("Starting ConsumerThread")
+        self.connection.run()
+        LOGGER.debug("ConsumerThread completed")
+
     def stop(self):
         LOGGER.debug("Stopping enrichers...")
         for enricher in self.enrichers:
             enricher.stop()
 
-        super().stop()
-
-    def _setup_channels(self):
-
-        enrichment_jobs_channel = EnrichmentJobsChannel(
-            name="enrichment_jobs_channel",
-            connection=self.connection,
-            close_connection=self.close_connection,
-            on_message=self.receive_traceroute_enrichment_job
-        )
-        self._channels.append(enrichment_jobs_channel)
-
-        ip_db_info_channel = IPDBInfoChannel(
-            name="ip_db_info_channel",
-            connection=self.connection,
-            close_connection=self.close_connection,
-            on_message=self.receive_ip_info_data
-        )
-        self._channels.append(ip_db_info_channel)
+        LOGGER.debug("Stopping the connection...")
+        self.connection.stop()
 
     @log_exception
     def receive_ip_info_data(self, ch, method, properties, body):
@@ -101,24 +123,6 @@ class ConsumerAsyncConnection(AsyncConnection):
         LOGGER.debug(f"Job rejected: {body.decode()}")
 
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
-
-
-class ConsumerThread(threading.Thread):
-
-    def __init__(self, name: str, enrichers_per_consumer: int):
-        super().__init__(name=name)
-
-        self.daemon = True
-
-        self.connection = Reconnector(ConsumerAsyncConnection, name, enrichers_per_consumer)
-
-    def run(self):
-        LOGGER.debug("Starting ConsumerThread")
-        self.connection.run()
-        LOGGER.debug("ConsumerThread completed")
-
-    def stop_consumer(self):
-        self.connection.stop()
 
 
 def setup_consumers(consumers: int = 1, enrichers_per_consumer: int = 3) -> List[ConsumerThread]:

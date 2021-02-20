@@ -130,6 +130,8 @@
 <script type="text/javascript" charset="utf-8">
   DATA = {{ t.to_json()|safe }};
 
+  status_checker = 0;
+
   function host_html_el(host_id, el) {
     return $("#h_" + host_id + "_" + el);
   }
@@ -246,6 +248,20 @@
     $("#copy_to_clipboard_icon").addClass("bi-clipboard");
   }
 
+  function check_status() {
+    $.ajax({
+      url: "{{ url_for("traceroute.status") }}?id={{ t.id }}"
+    }).done(function(data) {
+      console.log(data);
+
+      if ( data["status"] == "wip" ) {
+        status_checker = setTimeout(check_status, 5000);
+      } else {
+        location.reload();
+      }
+    });
+  }
+
   $(function() {
     if (DATA["status"] == "wip") {
       var socket = io('/t/{{ t.id }}');
@@ -259,6 +275,8 @@
 
           $("#tr_text").val(data["text"]);
           visualise_text();
+
+          clearTimeout(status_checker);
         }
       );
 
@@ -278,6 +296,8 @@
           visualise_host(data);
         }
       );
+
+      status_checker = setTimeout(check_status, 5000);
     }
 
     visualise_traceroute(DATA);

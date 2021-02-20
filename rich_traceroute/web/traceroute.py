@@ -5,6 +5,7 @@ from flask import redirect
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask import jsonify
 from peewee import DoesNotExist
 
 from rich_traceroute.traceroute import (
@@ -15,6 +16,17 @@ from .recaptcha import ReCaptcha
 
 
 bp = Blueprint("traceroute", __name__, url_prefix="")
+
+
+@bp.route("/status", methods=["GET"])
+def status():
+    traceroute_id = request.args.get("id")
+    try:
+        traceroute = Traceroute.get(Traceroute.id == traceroute_id)
+    except DoesNotExist:
+        return jsonify({"status": "not found"})
+
+    return jsonify({"status": traceroute.status})
 
 
 @bp.route("/t/<traceroute_id>", methods=["GET"])

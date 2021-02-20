@@ -27,7 +27,20 @@ class ReconnectMySQLDatabase(ReconnectMixin, MySQLDatabase):
             try:
                 super().connect(*args, **kwargs)
 
-                super().create_tables(BaseModel.__subclasses__())
+                # Recreate the tables if needed, but do not
+                # fail if something goes wrong here.
+                # Recreating tables is useful only for the tests,
+                # when the entire container where MySQL runs is
+                # destroyed and recreated from scratch (then, a new
+                # schema is created, and it doesn't contain any table).
+                # In prod, the tables are created when the DB is
+                # initialised, and they are expected to remain in place
+                # even if the connection to the DB is lost.
+                try:
+                    super().create_tables(BaseModel.__subclasses__())
+                except:  # noqa: E722
+                    pass
+
                 return
             except Exception as exc:
                 exc_class = type(exc)

@@ -40,7 +40,8 @@ def test_web_home(client):
     res = client.get("/")
     assert res.status_code == 200
     assert b"<title>rich-traceroute.io</title>" in res.data
-    assert b'<h1 class="mt-2">rich-traceroute.io</h1>' in res.data
+    assert (b'<h1 class="mt-2"><img style="padding-right: 10px" '
+            b'src="/static/favicon/favicon-32x32.png">rich-traceroute.io</h1>') in res.data
 
     # Be sure that when the home is loaded, we're using ReCaptcha 3.
     assert b"ReCaptcha3" in res.data

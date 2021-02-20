@@ -5,6 +5,8 @@ rich-traceroute
 
 Just a tool to enrich the output of traceroutes.
 
+.. image:: ./img/demo.png
+
 You can paste the output of your traceroute command, and it enriches it with additional information, like the origin ASNs of the IPs and the name of any Internet Exchange peering LAN that shows up in the path.
 
 Also, it produces a *normalised* plain-text output that contains all the information above.

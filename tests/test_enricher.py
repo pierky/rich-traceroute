@@ -94,7 +94,7 @@ def test_enricher_basic():
     assert t.enriched is True
     assert t.enrichment_started is not None
     assert t.enrichment_completed is not None
-    assert t.enrichment_completed > t.enrichment_started
+    assert t.enrichment_completed >= t.enrichment_started
 
     assert len(t.hops) == 10
 

@@ -52,7 +52,7 @@ jobs:
       - name: Run Pylint
         run: pylint --rcfile=.pylintrc rich_traceroute tests
 
-  coverage:
+  pytest:
     runs-on: ubuntu-latest
     steps:
       - name: Install GCC

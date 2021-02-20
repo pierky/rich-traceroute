@@ -9,6 +9,8 @@ PyYAML==5.4.1
 dnspython==1.16.0 # version 2 breaks eventlet https://medium.com/@pablankley/the-eventlet-dns-bug-that-could-take-down-your-production-servers-fa873253bb40
 cachetools==4.2.1
 PyMySQL==1.0.2
+gunicorn==20.0.4
+eventlet==0.30.1
 
 # # pymysql/_auth.py:
 # # RuntimeError: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods

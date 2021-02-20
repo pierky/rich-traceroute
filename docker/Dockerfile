@@ -29,9 +29,7 @@ RUN chown -R www-data:www-data /var/log/gunicorn
 RUN pip3 install --upgrade \
     pip \
     setuptools \
-    wheel \
-    gunicorn \
-    eventlet
+    wheel
 
 RUN mkdir /app
 

@@ -226,6 +226,7 @@ class Enricher(threading.Thread):
             SOCKET_IO_ENRICHMENT_COMPLETED_EVENT,
             {
                 "traceroute_id": traceroute.id,
+                "traceroute": traceroute.to_dict(),
                 "text": traceroute.to_text()
             },
             namespace=f"/t/{traceroute.id}"

@@ -276,6 +276,13 @@
           $(".wip_spinner").hide();
           socket.off();
 
+          for ( hop_n in data["traceroute"]["hops"] ) {
+            hop_data = data["traceroute"]["hops"][hop_n];
+            hop_data.forEach(function(host_data){
+              visualise_host(host_data);
+            })
+          }
+
           $("#tr_text").val(data["text"]);
           visualise_text();
 

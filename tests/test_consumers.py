@@ -168,6 +168,7 @@ def test_consumers_basic():
         SOCKET_IO_ENRICHMENT_COMPLETED_EVENT,
         {
             "traceroute_id": t_id,
+            "traceroute": t.to_dict(),
             "text": t.to_text()
         },
         namespace=f"/t/{t_id}"
@@ -343,6 +344,7 @@ def test_consumers_update():
         SOCKET_IO_ENRICHMENT_COMPLETED_EVENT,
         {
             "traceroute_id": t1_id,
+            "traceroute": t.to_dict(),
             "text": t.to_text()
         },
         namespace=f"/t/{t1_id}"
@@ -411,6 +413,7 @@ def test_ixp_networks_updater_integration(ixp_networks):
         SOCKET_IO_ENRICHMENT_COMPLETED_EVENT,
         {
             "traceroute_id": t1_id,
+            "traceroute": t.to_dict(),
             "text": t.to_text()
         },
         namespace=f"/t/{t1_id}"
@@ -537,6 +540,7 @@ def test_consumers_mysql_goes_away():
         SOCKET_IO_ENRICHMENT_COMPLETED_EVENT,
         {
             "traceroute_id": t1_id,
+            "traceroute": t.to_dict(),
             "text": t.to_text()
         },
         namespace=f"/t/{t1_id}"

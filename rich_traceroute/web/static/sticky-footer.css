@@ -1,0 +1,14 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  min-height: 100%;
+}
+body {
+  margin-bottom: 150px; /* Margin bottom by footer height */
+  height: 100%;
+}
+
+#main {
+  overflow: auto;
+  padding-bottom: 150px; /* this needs to be bigger than footer height*/
+}

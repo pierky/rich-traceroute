@@ -1,0 +1,1 @@
+{"data": [{"id": 35, "ix_id": 35, "name": "", "descr": "", "mtu": 1500, "dot1q_support": false, "rs_asn": 0, "arp_sponge": null, "ixf_ixp_member_list_url_visible": "Private", "created": "2010-07-29T00:00:00Z", "updated": "2020-09-17T11:01:03Z", "status": "ok"}], "meta": {"generated": 1611736014.351}}

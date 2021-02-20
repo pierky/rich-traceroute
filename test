@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+echo "Flake8..."
+flake8
+
+echo "PyLint..."
+pylint rich_traceroute tests
+
+echo "MyPy..."
+mypy --show-error-codes --ignore-missing-imports rich_traceroute tests
+
+echo "Coverage & PyTest..."
+coverage run \
+    --source=rich_traceroute \
+    -m pytest \
+        --assert=plain \
+        -vsx
+coverage report -m

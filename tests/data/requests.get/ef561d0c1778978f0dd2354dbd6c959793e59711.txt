@@ -1,0 +1,40 @@
+{
+    "messages": [
+        [
+            "warning",
+            "Given resource is not announced but result has been aligned to first-level less-specific (94.198.103.0/24)."
+        ]
+    ],
+    "see_also": [],
+    "version": "1.3",
+    "data_call_status": "supported - connecting to ursa",
+    "cached": false,
+    "data": {
+        "is_less_specific": true,
+        "announced": true,
+        "asns": [
+            {
+                "asn": 49367,
+                "holder": "ASSEFLOW - Seflow S.N.C. Di Marco Brame' & C."
+            }
+        ],
+        "related_prefixes": [],
+        "resource": "94.198.103.0/24",
+        "type": "prefix",
+        "block": {
+            "resource": "94.0.0.0/8",
+            "desc": "RIPE NCC (Status: ALLOCATED)",
+            "name": "IANA IPv4 Address Space Registry"
+        },
+        "actual_num_related": 0,
+        "query_time": "2021-02-09T00:00:00",
+        "num_filtered_out": 0
+    },
+    "query_id": "20210209173449-8b1d2d7a-d2c3-4239-8c63-3a6d1f4b9c23",
+    "process_time": 68,
+    "server_id": "app145",
+    "build_version": "live.2021.2.9.128",
+    "status": "ok",
+    "status_code": 200,
+    "time": "2021-02-09T17:34:49.897632"
+}

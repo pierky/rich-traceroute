@@ -1,0 +1,87 @@
+{% include "header.j2" %}
+
+<p class="small text-muted">This site is intended for use as a short-term exchange of traceroute information between parties. All submitted data is considered public information. Submitted data is not guaranteed to be permanent, and may be removed at any time. Please do not set up programs to send data to this site in an automated fashion; it is intended to be used directly by humans. If you do not agree to what reported in the <a href="{{ url_for('static_content.disclaimer') }}">Disclaimer and terms of use</a>, you should not use this tool.</p>
+
+{% if err_code %}
+<div class="alert alert-danger" role="alert">
+  {% if err_code == 1 %}
+  <h4 class="alert-heading">Sorry, ReCaptcha validation failed.</h4>
+  <p>If you are actually a bot, I guess you will not be disappointed; but if you are a human, please <a href="{{ url_for('static_content.contacts') }}" class="alert-link">reach me out</a>, perhaps we'll find a solution.</p>
+
+  {% elif err_code == 2 %}
+  <h4 class="alert-heading">Couldn't parse it.</h4>
+  <p>I'm sorry, I couldn't understand the input that you provided. None of the parsers were able to recognize it as a valid traceroute.</p>
+  <hr>
+  <p>A list of the formats that are currently supported by this tool can be found in the <a href="{{ url_for('faq.faq') }}#formats" class="alert-link">F.a.Q. page</a>.</p>
+
+  {% elif err_code == 3 %}
+  <h4 class="alert-heading">No input provided.</h4>
+  <p>Please, paste the traceroute that you want to enrich in the text area below.</p>
+  <hr>
+  <p>A list of the formats that are currently supported by this tool can be found in the <a href="{{ url_for('faq.faq') }}#formats" class="alert-link">F.a.Q. page</a>.</p>
+
+  {% endif %}
+</div>
+{% endif %}
+
+<form action="{{ url_for('traceroute.new') }}" method="POST" id="main_form">
+  <div class="form-group">
+    <textarea
+      name="raw"
+      id="raw"
+      class="form-control"
+      style="min-width: 100%"
+      rows=8
+      placeholder="Paste your traceroute here and press the Enrich button"
+    >{{ raw }}</textarea>
+    <small class="form-text text-muted">This site is protected by reCAPTCHA and the Google
+    <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+    <a href="https://policies.google.com/terms">Terms of Service</a> apply.</small>
+  </div>
+
+  {% if recaptcha %}
+  <!-- ReCaptcha{{ recaptcha.ver }}-->
+  <script>
+    function onSubmit(token) {
+      document.getElementById("main_form").submit();
+    }
+ </script>
+
+  <input
+    type="hidden"
+    name="recaptcha-ver"
+    value="{{ recaptcha.ver }}">
+  {%   if recaptcha.ver == 3 %}
+  <button
+    class="btn btn-primary g-recaptcha"
+    data-sitekey="{{ recaptcha.pub_key }}"
+    data-callback='onSubmit'
+    data-action='{{ recaptcha.RECAPTCHA_ACTION }}'
+  >Enrich</button>
+  {%   else %}
+  <div
+    class="g-recaptcha"
+    data-sitekey="{{ recaptcha.pub_key }}"
+    data-callback='onSubmit'
+  ></div>
+
+  <button
+    type="submit"
+    class="btn btn-primary"
+  >Enrich</button>
+  {%   endif %}
+  {% else %}
+  <button
+    type="submit"
+    class="btn btn-primary"
+  >Enrich</button>
+  {% endif %}
+</form>
+
+<script type="text/javascript">
+  $(function() {
+    $("#raw").focus();
+  });
+</script>
+
+{% include "footer.j2" %}

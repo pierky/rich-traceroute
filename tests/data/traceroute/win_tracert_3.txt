@@ -1,0 +1,22 @@
+H:\>tracert google.co.nz
+
+Tracing route to google.co.nz [216.58.200.99]
+over a maximum of 30 hops:
+
+  1    <1 ms    <1 ms    <1 ms  172.16.0.5
+  2     1 ms     1 ms    <1 ms  192.168.0.50
+  3     3 ms     5 ms     2 ms  122-56-168-186.n4l.sparkdigital.co.nz [122.56.168.186]
+  4     2 ms     2 ms     3 ms  122-56-99-240.n4l.sparkdigital.co.nz [122.56.99.240]
+  5     3 ms     3 ms     5 ms  122-56-99-243.n4l.sparkdigital.co.nz [122.56.99.243]
+  6     *        *        *     Request timed out.
+  7     2 ms     3 ms     3 ms  ae8-10.akbr6.global-gateway.net.nz [122.56.116.5]
+  8     4 ms     2 ms     3 ms  ae7-2.akbr7.global-gateway.net.nz [122.56.119.53]
+  9    27 ms    27 ms    27 ms  xe5-0-0.sgbr3.global-gateway.net.nz [202.50.232.242]
+ 10    27 ms    27 ms    25 ms  ae2-10.sgbr4.global-gateway.net.nz [202.50.232.246]
+ 11    28 ms    27 ms    26 ms  72.14.217.100
+ 12    27 ms    27 ms    27 ms  108.170.247.33
+ 13    27 ms    27 ms    27 ms  209.85.250.139
+ 14    27 ms    27 ms    27 ms  syd09s14-in-f3.1e100.net [216.58.200.99]
+
+Trace complete.
+

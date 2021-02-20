@@ -1,0 +1,13 @@
+1  helios.ee.lbl.gov (128.3.112.1)  0 ms  0 ms  0 ms
+2  lilac-dmc.Berkeley.EDU (128.32.216.1)  39 ms  19 ms  39 ms
+3  lilac-dmc.Berkeley.EDU (128.32.216.1)  19 ms  39 ms  19 ms
+4  ccngw-ner-cc.Berkeley.EDU (128.32.136.23)  39 ms  40 ms  19 ms
+5  ccn-nerif35.Berkeley.EDU (128.32.168.35)  39 ms  39 ms  39 ms
+6  csgw.Berkeley.EDU (128.32.133.254)  39 ms  59 ms  39 ms
+7  * * *
+8  * * *
+9  * * *
+10  * * *
+11  * * *
+12  * * *
+13  rip.Berkeley.EDU (128.32.131.22)  59 ms !  39 ms !  39 ms !

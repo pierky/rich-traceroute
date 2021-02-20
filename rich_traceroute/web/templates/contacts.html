@@ -1,0 +1,53 @@
+{% include "header.j2" %}
+
+<h4>Contacts</h4>
+
+<div class="container-lg">
+
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4 p-4">
+      <img
+        src="{{ url_for('static', filename='GitHub-Mark-120px-plus.png') }}"
+        width="120"
+        height="120"
+        alt="GitHub logo">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">GitHub repository</h5>
+        <p class="card-text">
+          The GitHub repository is the best way to file an issue or to contribute to this project.
+          <hr>
+          <a href="https://github.com/pierky/rich-traceroute" target="_blank">https://github.com/pierky/rich-traceroute</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4 p-4">
+      <img
+        class="rounded-circle"
+        width="120"
+        height="120"
+        src="{{ url_for('static', filename='avatar.jpg') }}"
+        alt="Contact me">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">Contact the author</h5>
+        <p class="card-text">
+          To reach out to the author, Pier Carlo Chiodi, please find all the contacts on his personal web site.
+          <hr>
+          <a href="https://www.pierky.com/#contactme" target="_blank">https://www.pierky.com/</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+{% include "footer.j2" %}

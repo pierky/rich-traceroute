@@ -1,0 +1,87 @@
+db:
+    # sqlite | mysql
+    type: mysql
+
+    # When type is 'sqlite':
+    # path: db.db
+
+    # When type is 'mysql':
+    schema: rich_traceroute
+    host: db
+    port: 3306
+    user: rich_traceroute_user
+    passwd: rich_traceroute_pass
+
+workers:
+    consumers: 1
+    enrichers: 3
+
+web:
+    flask:
+        secret_key: SuperSecret!
+
+rabbitmq:
+    protocol: amqp
+    username: guest
+    password: guest
+    host: rabbitmq
+    port: 5672
+    vhost: ""
+
+markus_params:
+    - class: markus.backends.statsd.StatsdMetrics
+      options:
+          statsd_host: graphite
+          statsd_port: 8125
+          statsd_prefix: rich_traceroute
+          statsd_maxudpsize: 512
+
+logging:
+    web:
+        version: 1
+        formatters:
+            rich_traceroute_formatter:
+                format: "%(asctime)s PID=%(process)d T=%(threadName)s %(levelname)s - %(message)s"
+        handlers:
+            file:
+                class: logging.handlers.RotatingFileHandler
+                filename: /var/log/rich_traceroute/web.log
+                maxBytes: 5000000
+                backupCount: 3
+                formatter: rich_traceroute_formatter
+            console:
+                class: logging.StreamHandler
+                stream: ext://sys.stderr
+                formatter: rich_traceroute_formatter
+        loggers:
+            rich_traceroute:
+                handlers: [file, console]
+                level: DEBUG
+            # rich_traceroute.enrichers.async_channel:
+            #     level: INFO
+            # rich_traceroute.enrichers.async_connection:
+            #     level: INFO
+    worker:
+        version: 1
+        formatters:
+            rich_traceroute_formatter:
+                format: "%(asctime)s PID=%(process)d T=%(threadName)s %(levelname)s - %(message)s"
+        handlers:
+            file:
+                class: logging.handlers.RotatingFileHandler
+                filename: /var/log/rich_traceroute/worker.log
+                maxBytes: 5000000
+                backupCount: 3
+                formatter: rich_traceroute_formatter
+            console:
+                class: logging.StreamHandler
+                stream: ext://sys.stderr
+                formatter: rich_traceroute_formatter
+        loggers:
+            rich_traceroute:
+                handlers: [file, console]
+                level: DEBUG
+            # rich_traceroute.enrichers.async_channel:
+            #     level: INFO
+            # rich_traceroute.enrichers.async_connection:
+            #     level: INFO

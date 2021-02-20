@@ -1,0 +1,12 @@
+traceroute to nis.nsf.net (35.1.1.48), 64 hops max, 38 byte packet
+1  helios.ee.lbl.gov (128.3.112.1)  19 ms  19 ms  0 ms
+2  lilac-dmc.Berkeley.EDU (128.32.216.1)  39 ms  39 ms  19 ms
+3  lilac-dmc.Berkeley.EDU (128.32.216.1)  39 ms  39 ms  19 ms
+4  ccngw-ner-cc.Berkeley.EDU (128.32.136.23)  39 ms  40 ms  39 ms
+5  ccn-nerif22.Berkeley.EDU (128.32.168.22)  39 ms  39 ms  39 ms
+6  128.32.197.4 (128.32.197.4)  40 ms  59 ms  59 ms
+7  131.119.2.5 (131.119.2.5)  59 ms  59 ms  59 ms
+8  129.140.70.13 (129.140.70.13)  99 ms  99 ms  80 ms
+9  129.140.71.6 (129.140.71.6)  139 ms  239 ms  319 ms
+10  129.140.81.7 (129.140.81.7)  220 ms  199 ms  199 ms
+11  nic.merit.edu (35.1.1.48)  239 ms  239 ms  239 ms

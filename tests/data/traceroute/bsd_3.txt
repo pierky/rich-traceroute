@@ -1,0 +1,19 @@
+traceroute to allspice.lcs.mit.edu (18.26.0.115), 64 hops max
+1  helios.ee.lbl.gov (128.3.112.1)  0 ms  0 ms  0 ms
+2  lilac-dmc.Berkeley.EDU (128.32.216.1)  19 ms  19 ms  19 ms
+3  lilac-dmc.Berkeley.EDU (128.32.216.1)  39 ms  19 ms  19 ms
+4  ccngw-ner-cc.Berkeley.EDU (128.32.136.23)  19 ms  39 ms  39 ms
+5  ccn-nerif22.Berkeley.EDU (128.32.168.22)  20 ms  39 ms  39 ms
+6  128.32.197.4 (128.32.197.4)  59 ms  119 ms  39 ms
+7  131.119.2.5 (131.119.2.5)  59 ms  59 ms  39 ms
+8  129.140.70.13 (129.140.70.13)  80 ms  79 ms  99 ms
+9  129.140.71.6 (129.140.71.6)  139 ms  139 ms  159 ms
+10  129.140.81.7 (129.140.81.7)  199 ms  180 ms  300 ms
+11  129.140.72.17 (129.140.72.17)  300 ms  239 ms  239 ms
+12  * * *
+13  128.121.54.72 (128.121.54.72)  259 ms  499 ms  279 ms
+14  * * *
+15  * * *
+16  * * *
+17  * * *
+18  ALLSPICE.LCS.MIT.EDU (18.26.0.115)  339 ms  279 ms  279 ms

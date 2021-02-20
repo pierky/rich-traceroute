@@ -1,0 +1,9 @@
+traceroute to www.mix-it.net (217.29.77.53), 30 hops max, 60 byte packets
+ 1  72.14.232.198 (72.14.232.198)  19.608 ms  19.605 ms  19.596 ms
+ 2  Google-demarc.seflow.it (94.198.103.149)  19.555 ms  19.536 ms  19.535 ms
+ 3  * * *
+ 4  * * *
+ 5  MIX.gw.mix-DDoS.SeFlow.it (94.198.103.142)  19.448 ms  19.454 ms  19.428 ms
+ 6  fw.mix-it.net (217.29.72.146)  19.344 ms  10.800 ms  10.738 ms
+ 7  * * *
+ 8  * *^C

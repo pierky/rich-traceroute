@@ -1,0 +1,1 @@
+{"data": [{"id": 61, "ixlan_id": 35, "protocol": "IPv4", "prefix": "217.29.66.0/23", "in_dfz": true, "created": "2010-07-29T00:00:00Z", "updated": "2020-08-26T05:23:08Z", "status": "ok"}], "meta": {"generated": 1611736030.673}}

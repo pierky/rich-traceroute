@@ -1,0 +1,16 @@
+ 1  192.168.0.1 1 msec  1 msec  0 msec
+ 2  10.5.226.206 98 msec
+    10.7.110.97 98 msec
+    10.5.226.206 99 msec
+ 3  10.11.128.50 97 msec  98 msec  97 msec
+ 4  10.12.66.97 241 msec  241 msec
+    10.11.128.50 97 msec
+ 5  10.12.3.38 [MPLS: Label 1111 Exp 0] 239 msec  236 msec  236 msec
+ 6  10.12.3.38 [MPLS: Label 1111 Exp 0] 237 msec
+    10.12.4.194 240 msec
+    10.12.3.38 236 msec
+ 7  10.12.2.166 [MPLS: Label 222 Exp 0] 242 msec  240 msec  242 msec
+ 8  10.12.3.145 240 msec
+    10.12.2.166 [MPLS: Label 222 Exp 0] 241 msec
+    10.12.3.145 240 msec
+ 9  10.13.36.121 263 msec  262 msec  262 msec

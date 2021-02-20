@@ -1,0 +1,56 @@
+{
+    "messages": [
+        [
+            "info",
+            "2 routes were filtered due to low visibility (min peers:10)."
+        ],
+        [
+            "warning",
+            "Given resource is not announced but result has been aligned to first-level less-specific (8.8.8.0/24)."
+        ]
+    ],
+    "see_also": [
+        {
+            "relation": "less-specific",
+            "resource": "8.0.0.0/9"
+        },
+        {
+            "relation": "less-specific",
+            "resource": "8.0.0.0/12"
+        }
+    ],
+    "version": "1.3",
+    "data_call_status": "supported - connecting to ursa",
+    "cached": false,
+    "data": {
+        "is_less_specific": true,
+        "announced": true,
+        "asns": [
+            {
+                "asn": 15169,
+                "holder": "GOOGLE"
+            }
+        ],
+        "related_prefixes": [
+            "8.0.0.0/9",
+            "8.0.0.0/12"
+        ],
+        "resource": "8.8.8.0/24",
+        "type": "prefix",
+        "block": {
+            "resource": "8.0.0.0/8",
+            "desc": "Administered by ARIN",
+            "name": "IANA IPv4 Address Space Registry"
+        },
+        "actual_num_related": 2,
+        "query_time": "2021-01-16T08:00:00",
+        "num_filtered_out": 2
+    },
+    "query_id": "20210116150313-782d44f5-e4a8-4272-b081-153f6ae80e74",
+    "process_time": 69,
+    "server_id": "app133",
+    "build_version": "live.2021.1.14.124",
+    "status": "ok",
+    "status_code": 200,
+    "time": "2021-01-16T15:03:13.354602"
+}

@@ -1,0 +1,95 @@
+{% include "header.j2" %}
+
+<h4>Frequently Asked Questions</h4>
+
+<div class="accordion" id="FAQ">
+
+{% macro faq(id, tag, title) %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="{{ id }}">
+      <button
+        class="accordion-button collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        aria-expanded="false"
+        aria-controls="{{ tag }}"
+        data-bs-target="#{{ tag }}"
+        id="{{ tag }}_button"
+      >{{ title }}</button>
+    </h2>
+    <div
+      id="{{ tag }}"
+      class="accordion-collapse collapse"
+      aria-labelledby="{{ id }}"
+      data-bs-parent="#FAQ"
+    >
+      <div class="accordion-body">
+        {{ caller() }}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% call faq("faq1", "formats", "Which traceroute formats are supported?") %}
+<p>The following formats are supported:</p>
+<ul>
+{% for parser_class, description, examples in parser_examples %}
+  <li><a
+    data-bs-toggle="collapse"
+    href="#Example{{ parser_class }}"
+    role="button"
+    aria-expanded="false"
+    aria-controls="#Example{{ parser_class }}">{{description}}</a>
+  </li>
+  <div class="collapse" id="Example{{ parser_class }}">
+    {% for example in examples %}
+    <div class="card card-body">
+      <pre><samp>{{ example }}</samp></pre>
+    </div>
+    {% endfor %}
+  </div>
+{% endfor %}
+</ul>
+{% endcall %}
+
+{% call faq("faq2", "retention", "How long are the enriched traceroutes kept?") %}
+<p>
+  There is not an official guaranteed period of time. The traceroutes enriched using this tool can be deleted at any time for any reason. Do not rely on their availability.
+</p>
+{% endcall %}
+
+{% call faq("faq3", "external_sources", "How are the additional information gathered?") %}
+<p>
+  To enrich the traceroutes some external resources are queried. The tool uses <a href="https://stat.ripe.net/" target="_blank">RIPEstat</a> to gather information about the origin ASN of the IP addresses. <a href="https://www.peeringdb.com/" target="_blank">PeeringDB</a> is used to build a mapping of the prefixes used on the Internet Exchange peering LANs, to understand when the input represents a path that crosses an IXP. Simple DNS queries are used to perform reverse DNS resolution of the hosts.
+</p>
+{% endcall %}
+
+{% call faq("faq4", "numeric_format", "What level of accuracy is offered?") %}
+<p>
+  The tool and the web service are offered in best-effort, just to make it easier the interpretation of the paths represented by the traceroutes provided as the input.<br>
+  <br>
+  Accuracy of the information is based on external resources which are not monitored by the author of the software nor by the operator of this web site. No guarantees are provided for their accuracy.<br>
+  <br>
+  Traceroutes that contain hostnames might be less accurate than traceroutes having IP addresses: to obtain information for a given host a name resolution must be performed to obtain the IP address, and in certain circumnstances the IP address resolved by the tool may not be the one actually traversed by the packets that generated the traceroute itself.<br>
+  <br>
+  Several studies have been done about the accuracy of traceroutes and IP-to-ASNs mapping: some links are provided here, to let the user of this tool to build their own understanding:
+
+  <ul>
+    <li><a href="https://www.researchgate.net/publication/220641874_A_Framework_to_Quantify_the_Pitfalls_of_Using_Traceroute_in_AS-Level_Topology_Measurement" target="_blank">A Framework to Quantify the Pitfalls of Using Traceroute in AS-Level Topology Measurement</a></li>
+
+    <li><a href="https://www.caida.org/publications/papers/2003/3rdparty/3rdparty.pdf" target="_blank">On Third-party Addresses in Traceroute Paths</a></li>
+  </ul>
+</p>
+{% endcall %}
+
+</div>
+
+<script>
+  if ($(location).attr('hash')) {
+    hash = $(location).attr('hash');
+    $(hash).addClass('show');
+    $(hash + "_button").removeClass('collapsed');
+  }
+</script>
+
+{% include "footer.j2" %}

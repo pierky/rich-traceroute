@@ -1,0 +1,319 @@
+{% include "header.j2" %}
+
+{% if err_code %}
+<div class="alert alert-danger" role="alert">
+  {% if err_code == 1 %}
+  <h4 class="alert-heading">Traceroute not found.</h4>
+  <p>It wasn't possible to find a traceroute matching the ID that you provided.</p>
+  <hr>
+  <p>Please remember: traceroutes enriched via this tool are not guaranteed to be permanent, and may be removed at any time.</p>
+  {% endif %}
+</div>
+{% else %}
+<h4>Traceroute ID {{ t.id }}
+
+{% if t.status == "not_parsed" %}
+<i class="bi bi-exclamation-triangle-fill text-danger" title="Error while processing this traceroute"></i>
+{% elif t.status == "timeout" %}
+<i class="bi bi-exclamation-triangle-fill text-warning" title="Something went wrong while enriching this traceroute"></i>
+{% endif %}
+<i
+  id="tr_status_ok"
+  class="bi bi-check-circle-fill text-success"
+  {% if not t.enriched %}
+  style="display: none;"
+  {% endif %}
+></i>
+</h4>
+
+<table
+  class="table table-striped table-hover table-borderless"
+  id="main_table"
+  style="display: none"
+>
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">IP</th>
+      <th class="tr_col_loss" scope="col">Loss %</th>
+      <th class="tr_col_rtt" scope="col">RTT (ms)</th>
+      <th scope="col">IP info</th>
+      <th scope="col">Reverse</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for hop in t.hops %}
+
+    {%  if not hop.hosts %}
+    <tr>
+      <td align="right">{{ hop.hop_number }}</td>
+      <td>*</td>
+      <td colspan="5">&nbsp;</td>
+    </tr>
+    {%  else %}
+    {%    for host in hop.hosts %}
+
+    <tr>
+    {%      if loop.index0 == 0 %}
+      <td align="right">{{ hop.hop_number }}</td>
+    {%      else %}
+      <td>&nbsp;</td>
+    {%      endif %}
+
+      <td>
+        <span id="h_{{ host.id }}_ip"></span>
+      </td>
+      <td class="tr_col_loss">
+        <span id="h_{{ host.id }}_loss"></span>
+      </td>
+      <td class="tr_col_rtt">
+        <span id="h_{{ host.id }}_rtt"></span>
+      </td>
+      <td>
+        <div id="h_{{ host.id }}_info">
+          <div class="wip_spinner spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div id="h_{{ host.id }}_name">
+          <div class="wip_spinner spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    {%    endfor %}
+    {%  endif %}
+    {% endfor %}
+  </tbody>
+</table>
+
+<hr class="mt-2 mb-3"/>
+
+<h5>Plain-text format
+{% if t.status == "wip" %}
+<div class="spinner-border spinner-border-sm wip_spinner" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+{% endif %}
+</h5>
+<div
+  style="position: relative;"
+>
+  <button
+    disabled
+    class="btn btn-primary"
+    id="copy_to_clipboard"
+    data-clipboard-action="copy"
+    data-clipboard-target="#tr_text_format"
+    style="position: absolute; top: -10px; right: -10px;"
+  >
+    <i
+      class="bi bi-clipboard"
+      id="copy_to_clipboard_icon"
+    ></i> Copy to clipboard
+  </button>
+  <pre><samp id="tr_text_format"></samp></pre>
+</div>
+
+<textarea style="display: none" rows=10 cols=40 id="tr_text">{% if t.status == "enriched" %}{{ t.to_text()|safe }}{% endif %}</textarea>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.js"
+  integrity="sha512-+l9L4lMTFNy3dEglQpprf7jQBhQsQ3/WvOnjaN/+/L4i0jOstgScV0q2TjfvRF4V+ZePMDuZYIQtg5T4MKr+MQ=="
+  crossorigin="anonymous">
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  DATA = {{ t.to_json()|safe }};
+
+  function host_html_el(host_id, el) {
+    return $("#h_" + host_id + "_" + el);
+  }
+
+  function visualise_host(data) {
+    host_id = data["id"];
+    enriched = data["enriched"]
+
+    original_host = data["original_host"];
+    ip = data["ip"];
+    reverse = data["name"];
+    loss = data["loss"];
+    avg_rtt = data["avg_rtt"];
+    min_rtt = data["min_rtt"];
+    max_rtt = data["max_rtt"];
+
+    origins = data["origins"];
+    ixp_network = data["ixp_network"];
+
+    // IP
+    // ------------------
+
+    html_ip = host_html_el(host_id, "ip");
+
+    if (ip !== null) {
+      html_ip.html("<a title='See on RIPEstat' href='http://stat.ripe.net/" + ip + "' target='_blank'>" + ip + "</a>");
+    } else {
+      html_ip.html(original_host);
+    }
+
+    // Loss
+    // ------------------
+
+    if (loss !== null) {
+      html_loss = host_html_el(host_id, "loss");
+      html_loss.html(loss);
+
+      $(".tr_col_loss").show();
+    }
+
+    // RTTs
+    // ------------------
+
+    if (avg_rtt !== null) {
+      html_rtt = host_html_el(host_id, "rtt");
+
+      html_rtt_content = avg_rtt.toFixed(2);
+
+      if ((min_rtt !== null) && (max_rtt !== null)) {
+        html_rtt_content += " <small>" + min_rtt.toFixed(2) + " - " + max_rtt.toFixed(2) + "</small>";
+      }
+
+      html_rtt.html(html_rtt_content);
+
+      $(".tr_col_rtt").show();
+    }
+
+    // Reverse
+    // ------------------
+
+    if (enriched) {
+      html_name = host_html_el(host_id, "name");
+
+      if (reverse !== null) {
+        html_name.html(reverse);
+      } else {
+        html_name.html("");
+      }
+    }
+
+    // IP info
+    // ------------------
+
+    if (enriched) {
+      html_info = host_html_el(host_id, "info");
+
+      html_info_content = "";
+
+      if (origins !== null){
+        $.each(origins, function(idx, item) {
+          asn = item[0];
+          holder = item[1];
+
+          html_info_content += '<a title="See on RIPEstat" target="_blank" href="http://stat.ripe.net/AS' + asn.toString() + '">AS' + asn.toString() + '</a>, ' + holder + '<br>';
+        });
+      };
+
+      if (ixp_network !== null){
+        html_info_content += "IX: " + ixp_network["ix_name"];
+      }
+
+      html_info.html(html_info_content);
+    }
+  }
+
+  function visualise_traceroute(traceroute_data) {
+    $.each(traceroute_data["hops"], function(hop_n, hosts) {
+      $.each(hosts, function(idx, host_data) {
+        visualise_host(host_data);
+      })
+    });
+
+    $("#main_table").show()
+  }
+
+  function visualise_text() {
+    text = $("#tr_text").val();
+    $("#tr_text_format").html(text);
+    $("#copy_to_clipboard").prop("disabled", false);
+  }
+
+  function reset_copy_to_clipboard_icon() {
+    $("#copy_to_clipboard_icon").removeClass("bi-clipboard-check");
+    $("#copy_to_clipboard_icon").addClass("bi-clipboard");
+  }
+
+  $(function() {
+    if (DATA["status"] == "wip") {
+      var socket = io('/t/{{ t.id }}');
+
+      socket.on(
+        "{{ SOCKET_IO_ENRICHMENT_COMPLETED_EVENT }}",
+        function(data) {
+          $("#tr_status_ok").show();
+          $(".wip_spinner").hide();
+          socket.off();
+
+          $("#tr_text").val(data["text"]);
+          visualise_text();
+        }
+      );
+
+      socket.on(
+        "{{ SOCKET_IO_ERROR_EVENT }}",
+        function(data) {
+          host_id = data["host_id"];
+          error = data["error"];
+          html_info = host_html_el(host_id, "info");
+          html_info.html("<p class='text-danger'>" + error + "</p>");
+        }
+      );
+
+      socket.on(
+        "{{ SOCKET_IO_DATA_EVENT }}",
+        function(data) {
+          visualise_host(data);
+        }
+      );
+    }
+
+    visualise_traceroute(DATA);
+
+    if (DATA["status"] == "enriched") {
+      visualise_text();
+    }
+
+    if (DATA["status"] == "wip") {
+      $(".wip_spinner").show();
+    }
+
+    var clipboard = new ClipboardJS('#copy_to_clipboard');
+
+    clipboard.on('success', function(e) {
+        console.info('Action:', e.action);
+        console.info('Text:', e.text);
+        console.info('Trigger:', e.trigger);
+
+        e.clearSelection();
+
+        $("#copy_to_clipboard_icon").removeClass("bi-clipboard");
+        $("#copy_to_clipboard_icon").addClass("bi-clipboard-check");
+
+        setTimeout(reset_copy_to_clipboard_icon, 1500);
+    });
+
+    clipboard.on('error', function(e) {
+        console.error('Action:', e.action);
+        console.error('Trigger:', e.trigger);
+    });
+
+  });
+</script>
+
+{# if err_code #}
+{% endif %}
+
+{% include "footer.j2" %}

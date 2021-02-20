@@ -1,0 +1,34 @@
+    </main>
+
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="row">
+        <center>
+          <a class="btn btn-outline-primary" href="/" role="button">Enrich a traceroute</a>
+
+          <a class="btn btn-outline-secondary" href="{{ url_for('faq.faq') }}" role="button">F.A.Q.</a>
+
+          <a class="btn btn-outline-secondary" href="{{ url_for('static_content.contacts') }}" role="button">Contacts</a>
+        </center>
+        </div>
+
+        <div class="row">
+        <center>
+          <a class="btn btn-outline-secondary" href="{{ url_for('static_content.privacy') }}" role="button">Privacy</a>
+
+          <a class="btn btn-outline-secondary" href="{{ url_for('static_content.disclaimer') }}" role="button">Disclaimer and terms of use</a>
+        </center>
+        </div>
+      </div>
+    </nav>
+
+    {% if recaptcha %}
+    <script
+      src="{{ recaptcha.URL }}"
+      async defer>
+    </script>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+  </body>
+</html>

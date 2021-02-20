@@ -1,0 +1,40 @@
+{
+    "messages": [
+        [
+            "warning",
+            "Given resource is not announced but result has been aligned to first-level less-specific (93.62.0.0/15)."
+        ]
+    ],
+    "see_also": [],
+    "version": "1.3",
+    "data_call_status": "supported - connecting to ursa",
+    "cached": false,
+    "data": {
+        "is_less_specific": true,
+        "announced": true,
+        "asns": [
+            {
+                "asn": 12874,
+                "holder": "FASTWEB - Fastweb SpA"
+            }
+        ],
+        "related_prefixes": [],
+        "resource": "93.62.0.0/15",
+        "type": "prefix",
+        "block": {
+            "resource": "93.0.0.0/8",
+            "desc": "RIPE NCC (Status: ALLOCATED)",
+            "name": "IANA IPv4 Address Space Registry"
+        },
+        "actual_num_related": 0,
+        "query_time": "2021-01-28T00:00:00",
+        "num_filtered_out": 0
+    },
+    "query_id": "20210128081835-08a7e465-3903-41cf-9b82-77587f35ce61",
+    "process_time": 468,
+    "server_id": "app144",
+    "build_version": "live.2021.1.26.125",
+    "status": "ok",
+    "status_code": 200,
+    "time": "2021-01-28T08:18:35.485895"
+}

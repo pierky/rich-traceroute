@@ -5,6 +5,7 @@ import queue
 import logging
 import requests
 import datetime
+import random
 
 import radix
 import markus
@@ -72,6 +73,10 @@ class Enricher(threading.Thread):
         dispatch_to_others: bool,
         last_updated: datetime.datetime = datetime.datetime.utcnow()
     ) -> None:
+        # This function is called from other threads too,
+        # so make sure that it runs fast and it takes care
+        # of locking the resources that it updates (the
+        # ip_info_db specifically).
 
         with self.ip_info_db_lock:
             node = self.ip_info_db.add(str(ip_info.prefix))
@@ -336,6 +341,7 @@ class Enricher(threading.Thread):
     def _load_ip_info_entries_from_db(self):
         # Load entries from the DB
         LOGGER.info("Loading IP info entries from DB...")
+
         with log_execution_time(METRICS, LOGGER, "load_ip_info_entries_from_db"):
             for db_prefix in IPInfo_Prefix.select():
                 self.add_ip_info_to_local_cache(
@@ -343,10 +349,18 @@ class Enricher(threading.Thread):
                     last_updated=db_prefix.last_updated,
                     dispatch_to_others=False
                 )
+
         LOGGER.info("IP info entries loaded")
 
     def run(self):
-        self._load_ip_info_entries_from_db()
+        # Run the function that loads the existing IPInfo
+        # entries from the DB in the next couple of minutes.
+        # The loading of those entries would block the
+        # thread, so let's do it asynchronously.
+        delay = random.randrange(1, 120)
+        thread = threading.Timer(delay, self._load_ip_info_entries_from_db)
+        thread.name = self.name + "-load-entries-from-db"
+        thread.start()
 
         LOGGER.info("Enricher ready to process jobs")
         while True:

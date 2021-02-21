@@ -22,6 +22,11 @@ class LineByLineParser(BaseParser):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Dictionary whose keys are the n. of the hops
+        # for this traceroute, and values are either
+        # None (meaning that no replies were observed
+        # for that hop) or a dict of hosts and their
+        # RTTs.
         self.internal_repr: Dict[
             int,
             Union[
@@ -35,6 +40,28 @@ class LineByLineParser(BaseParser):
         hop_n: int,
         host_rtts: Optional[Tuple[Union[IPAddress, str], List[float]]]
     ) -> None:
+        """Incrementally add information about a hop to the internal structure.
+
+        This function adds information about a hop to the internal
+        structure that is eventually used to generate the self.hops
+        output of the parser.
+
+        Args:
+            hop_n (int): the n. of the hop for which information
+                are going to be added.
+            host_rtts (tuple): host and list of RTTs representing
+                the information to be added.
+
+        If host_rtts is None, it means that no replies were
+        received for this hop. Otherwise, it must be a tuple whose
+        first item is a host (either an ipaddress.IPvXAddress or
+        a string) and the second item is a list of RTT values to
+        be added.
+
+        The function can be called multiple times for the same hop
+        and host, in which case the RTT values are just appended to
+        the list of RTT values for that host.
+        """
 
         if hop_n not in self.internal_repr:
             if not host_rtts:

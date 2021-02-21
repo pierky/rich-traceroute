@@ -27,12 +27,14 @@ class BaseParser(ABC):
     @classmethod
     @abstractmethod
     def DESCRIPTION(cls) -> str:
+        """Short description of the format that this parser is able to understand."""
         ...
 
     @property
     @classmethod
     @abstractmethod
     def EXAMPLES(cls) -> List[str]:
+        """List of files containing example texts that this parser can understand."""
         ...
 
     @classmethod
@@ -49,6 +51,12 @@ class BaseParser(ABC):
     def __init__(self, raw_data: str):
         self.raw_data = raw_data
 
+        # This must be set by the parser on exist.
+        # The number of each hop must be the key,
+        # and the value must be a list of hosts
+        # for which replies were received for that hop.
+        # If no replies were found for a specific hop,
+        # the list must be empty.
         self.hops: Dict[int, List[HopHost]] = {}
 
     @staticmethod
@@ -81,3 +89,13 @@ class BaseParser(ABC):
 
         if not self.hops:
             raise ParserError("No hops found")
+
+        expected_hop = 1
+        for hop_n in self.hops:
+            if hop_n != expected_hop:
+                raise ParserError(
+                    f"Hop n. {expected_hop} was expected, "
+                    f"but {hop_n} was found."
+                )
+
+            expected_hop += 1

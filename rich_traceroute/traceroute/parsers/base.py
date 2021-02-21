@@ -11,6 +11,12 @@ HOSTNAME_ALLOWED_LABELS = re.compile(
     re.IGNORECASE
 )
 
+# This is the string to be used as the DESCRIPTION of the
+# parsers for which the origin of the format is unknown.
+# It is used by the WEB FAQ page to group all those parsers
+# into one example only.
+OTHER_UNKNOWN_TRACEROUTE_FORMAT = "Other formats"
+
 
 class HopHost(NamedTuple):
 

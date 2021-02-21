@@ -35,6 +35,9 @@ class BSDParser(LineByLineParser):
             if beginning_of_line and beginning_of_line.isdigit():
                 this_hop_n = int(beginning_of_line)
 
+                if this_hop_n == 0:
+                    continue
+
                 if this_hop_n != last_hop_n + 1:
                     raise ParserError(
                         f"Unexpected hop n.: found {this_hop_n}, "

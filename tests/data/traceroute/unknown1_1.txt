@@ -1,0 +1,12 @@
+1?: [LOCALHOST]                      pmtu 1500
+ 1:  _gateway                                              0.874ms
+ 1:  _gateway                                              0.905ms
+ 2:  hostname1                                            10.599ms
+ 3:  192.0.2.1                                            11.419ms
+ 4:  192.0.2.2                                            10.929ms
+ 5:  peer8-et-3-0-2.example.com                           11.096ms asymm  7
+ 6:  10.0.0.1                                             10.909ms
+ 7:  ae24.net.example.com                                 11.195ms
+ 8:  ae28.net.example.com                                 11.332ms
+ 9:  ae31.net.example.com                                 15.583ms
+10:  ae29.net.example.com                                 20.834ms asymm 11

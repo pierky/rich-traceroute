@@ -5,11 +5,13 @@ rich-traceroute
 
 Just a tool to enrich the output of traceroutes.
 
-.. image:: ./img/demo.png
+|Demo screen|
 
 You can paste the output of your traceroute command, and it enriches it with additional information, like the origin ASNs of the IPs and the name of any Internet Exchange peering LAN that shows up in the path.
 
 Also, it produces a *normalised* plain-text output that contains all the information above.
+
+The enriched output can then be shared with others using the unique URL that identifies it. *(Persistency of the data is not guaranteed and traceroutes expire after few days.)*
 
 The online version is reachable at https://rich-traceroute.io
 
@@ -26,6 +28,10 @@ Author
 Pier Carlo Chiodi - https://pierky.com
 
 Blog: https://blog.pierky.com Twitter: `@pierky <https://twitter.com/pierky>`_
+
+.. |Demo screen| image:: ./img/demo.png
+    :target: https://rich-traceroute.io
+
 
 .. |Build Status| image:: https://github.com/pierky/rich-traceroute/actions/workflows/tests.yml/badge.svg?branch=master
     :target: https://github.com/pierky/rich-traceroute/actions/workflows/tests.yml

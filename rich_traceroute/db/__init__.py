@@ -20,8 +20,17 @@ db = DatabaseProxy()
 
 class ReconnectMySQLDatabase(ReconnectMixin, MySQLDatabase):
 
+    def __init__(self, *args, **kwargs):
+        self.max_attempts = kwargs.pop("max_attempts", None)
+        if self.max_attempts:
+            self.max_attempts = int(self.max_attempts)
+
+        super().__init__(*args, **kwargs)
+
     def connect(self, *args, **kwargs):
         delay = 1
+
+        attempt_n = 1
 
         while True:
             try:
@@ -55,6 +64,16 @@ class ReconnectMySQLDatabase(ReconnectMixin, MySQLDatabase):
                 else:
                     raise exc
 
+                attempt_n += 1
+
+                if self.max_attempts and attempt_n > self.max_attempts:
+                    LOGGER.error(
+                        f"Connection to the database failed: {exc}. "
+                        f"Not attempting it again ({attempt_n} attempt(s) done already)."
+                    )
+
+                    raise exc
+
                 delay = delay * 2
 
                 if delay > 60:
@@ -83,7 +102,7 @@ def connect_via_sqlite(path):
     )
 
 
-def connect_via_mysql(schema, host, port, user, passwd):
+def connect_via_mysql(schema, host, port, user, passwd, max_attempts=None):
     LOGGER.info(
         f"Connecting to DB {schema} on {host}:{port}..."
     )
@@ -94,7 +113,8 @@ def connect_via_mysql(schema, host, port, user, passwd):
             host=host,
             port=port,
             user=user,
-            passwd=passwd
+            passwd=passwd,
+            max_attempts=max_attempts
         )
     )
 
@@ -117,13 +137,13 @@ def _get_db_type(db_config):
     return db_config["type"]
 
 
-def connect_to_the_db():
+def connect_to_the_db(max_attempts=None):
     db_config = get_db_config()
 
     if _get_db_type(db_config) == "sqlite":
         connect_via_sqlite(_get_db_path(db_config))
     else:
-        connect_via_mysql(*_get_db_init_args(db_config))
+        connect_via_mysql(*_get_db_init_args(db_config), max_attempts=max_attempts)
 
     db.create_tables(BaseModel.__subclasses__())
 

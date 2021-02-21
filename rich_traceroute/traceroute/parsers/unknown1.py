@@ -55,7 +55,7 @@ class UnknownFormat1Parser(LineByLineParser):
 
             try:
                 ipaddress.ip_address(host)
-            except:
+            except:  # noqa: E722
                 if not self.looks_like_a_hostname(host):
                     raise ParserError(
                         f"Can't determine the host from line {line}"
@@ -65,14 +65,14 @@ class UnknownFormat1Parser(LineByLineParser):
 
             if not rtt_raw.endswith("ms"):
                 raise ParserError(
-                    f"RTT does not end with 'ms': {rtt}"
+                    f"RTT does not end with 'ms': {rtt_raw}"
                 )
 
             rtt_raw = rtt_raw[:-2]
 
             try:
                 rtt = float(rtt_raw)
-            except:
+            except:  # noqa: E722
                 raise ParserError(
                     f"Can't convert string '{rtt}' into float"
                 )

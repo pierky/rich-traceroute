@@ -29,6 +29,14 @@ class ParserTestContext:
 
             best_parser = parse_raw_traceroute(raw)
 
+            assert best_parser is not None, \
+                (
+                    f"Couldn't find a working parser for {path}. "
+                    "Perhaps the parser class has not been added to "
+                    "'parsers' inside "
+                    "rich_traceroute/traceroute/parsers/__init__.py?"
+                )
+
             if not isinstance(best_parser, expected_parser_class):
                 expected_parser = expected_parser_class(raw)
                 expected_parser.parse()

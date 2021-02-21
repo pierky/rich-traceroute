@@ -10,6 +10,7 @@ from .iosxr import IOSXRParser
 from .linux import LinuxParser
 from .win_tracert import WindowsTracertParser
 from .unknown1 import UnknownFormat1Parser
+from .winmtr import WinMTRParser
 from ...errors import ParserError
 
 LOGGER = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ parsers = [
     IOSXRParser,
     BSDParser,
     WindowsTracertParser,
+    WinMTRParser,
     UnknownFormat1Parser
 ]
 

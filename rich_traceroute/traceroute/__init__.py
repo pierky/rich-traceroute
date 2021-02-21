@@ -37,7 +37,7 @@ class Traceroute(BaseModel):
 
     id = CharField(primary_key=True, default=record_uid)
 
-    raw = CharField(max_length=1024)
+    raw = CharField(max_length=1024 * 16)
     created = DateTimeField(default=datetime.datetime.utcnow)
 
     parsed = BooleanField(default=False)

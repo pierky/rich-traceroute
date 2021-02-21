@@ -13,6 +13,7 @@ from .home import bp as bp_home
 from .traceroute import bp as bp_traceroute
 from .static_content import bp as bp_static_content
 from .faq import bp as bp_faq
+from .stats import bp as bp_stats
 
 from flask import Flask
 from flask_socketio import SocketIO
@@ -34,6 +35,7 @@ def create_app(*args):
     app.register_blueprint(bp_traceroute)
     app.register_blueprint(bp_static_content)
     app.register_blueprint(bp_faq)
+    app.register_blueprint(bp_stats)
 
     socketio = SocketIO()
     socketio.init_app(

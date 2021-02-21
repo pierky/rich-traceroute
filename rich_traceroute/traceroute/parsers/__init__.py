@@ -3,7 +3,7 @@ import logging
 
 from .base import BaseParser
 from .mtr_json import MTRJSONParser
-from .mtr import MTRParser
+from .mtr import MTRParser, MTRParserInteractive
 from .junos import JunosParser
 from .bsd import BSDParser
 from .iosxr import IOSXRParser
@@ -16,6 +16,7 @@ LOGGER = logging.getLogger(__name__)
 parsers = [
     MTRJSONParser,
     MTRParser,
+    MTRParserInteractive,
     JunosParser,
     LinuxParser,
     IOSXRParser,

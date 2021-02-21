@@ -6,7 +6,7 @@ from ...errors import ParserError
 
 class MTRParser(BaseParser):
 
-    DESCRIPTION = "MTR plain text"
+    DESCRIPTION = "MTR (report mode)"
 
     EXAMPLES = [
         "tests/data/traceroute/mtr_2.txt"
@@ -27,8 +27,8 @@ class MTRParser(BaseParser):
     @staticmethod
     def _get_hop_n(line: str) -> Tuple[int, str]:
 
-        #  1.|-- 192.168.1.254              0.0%     2    3.8   6.4   3.8   9.1   3.7
-        #  2.|-- 10.1.131.181               0.0%     2    9.0   9.2   9.0   9.5   0.4
+        #  1.|-- 192.168.1.254      0.0%     2    3.8   6.4   3.8   9.1   3.7
+        #  2.|-- 10.1.131.181       0.0%     2    9.0   9.2   9.0   9.5   0.4
 
         if "|--" not in line:
             raise ParserError("'|--' marker not found")
@@ -46,18 +46,25 @@ class MTRParser(BaseParser):
         processing_hops = False
 
         for line in lines:
+            line = line.strip()
+
+            if not line:
+                continue
+
             if line.startswith("HOST:"):
                 # HOST: localhost                   Loss%   Snt   Last   Avg  Best  Wrst StDev
                 processing_hops = True
                 continue
 
-            if line.startswith("Host"):
+            if line.startswith("Host "):
                 # Host              Loss%   Snt   Last   Avg  Best  Wrst StDev
                 processing_hops = True
                 continue
 
             if not processing_hops:
                 continue
+
+            line = line.replace("(waiting for reply)", "???")
 
             #  1.|-- 192.168.1.254              0.0%     2    3.8   6.4   3.8   9.1   3.7
             #  2.|-- 10.1.131.181               0.0%     2    9.0   9.2   9.0   9.5   0.4
@@ -119,3 +126,31 @@ class MTRParser(BaseParser):
                 host_attrs[what_we_are_parsing] = rtt
 
             self._add_hop_host(this_hop_n, host, **host_attrs)
+
+
+class MTRParserInteractive(MTRParser):
+
+    DESCRIPTION = "MTR (interactive)"
+
+    EXAMPLES = [
+        "tests/data/traceroute/mtr_interactive_2.txt"
+    ]
+
+    @staticmethod
+    def _get_hop_n(line: str) -> Tuple[int, str]:
+
+        #  1. 192.168.1.254         0.0%    12    3.3  11.6   2.0  50.7  15.1
+        #  2. 10.1.131.181          0.0%    12    9.5  38.3   8.8 112.8  41.9
+
+        first_col = line.strip().split()[0].strip()
+        rest_of_the_line = " ".join(line.strip().split()[1:])
+
+        if first_col.endswith("."):
+            raw_hop_n = first_col[:-1]
+        else:
+            raw_hop_n = first_col
+
+        if not raw_hop_n.isdigit():
+            raise ParserError(f"the parsed hop is not numeric: {raw_hop_n}")
+
+        return int(raw_hop_n), rest_of_the_line

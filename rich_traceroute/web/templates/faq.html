@@ -4,9 +4,9 @@
 
 <div class="accordion" id="FAQ">
 
-{% macro faq(id, tag, title) %}
+{% macro faq(tag, title) %}
   <div class="accordion-item">
-    <h2 class="accordion-header" id="{{ id }}">
+    <h2 class="accordion-header" id="h_{{ tag }}">
       <button
         class="accordion-button collapsed"
         type="button"
@@ -20,7 +20,7 @@
     <div
       id="{{ tag }}"
       class="accordion-collapse collapse"
-      aria-labelledby="{{ id }}"
+      aria-labelledby="h_{{ tag }}"
       data-bs-parent="#FAQ"
     >
       <div class="accordion-body">
@@ -30,7 +30,27 @@
   </div>
 {% endmacro %}
 
-{% call faq("faq1", "formats", "Which traceroute formats are supported?") %}
+{% call faq("whatsit", "What is this tool?") %}
+<p>Just a tool to enrich the output of traceroutes.</p>
+
+<p>You can paste the output of your traceroute command, and it enriches it with additional information, like the origin ASNs of the IPs and the name of any Internet Exchange peering LAN that shows up in the path.</p>
+
+<p>Also, it produces a <em>normalised</em> plain-text output that contains all the information above.</p>
+
+<p>The enriched output can then be shared with others using the unique URL that identifies it. <b>(Persistency of the data is not guaranteed and traceroutes expire after few days. See the F.A.Q. below.)</b></p>
+
+<p>It's Free Open Source Software, contributions are welcome!</p>
+
+<p>Also, the rich-tracereoute.io website is maintained in best effort mode, with no guarantees of uptime. If you like it, feel free to make a donation to help me pay the bill ;-)</p>
+
+<form action="https://www.paypal.com/donate" method="post" target="_top">
+<input type="hidden" name="hosted_button_id" value="AR5SXL3KDRKY8" />
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_IT/i/scr/pixel.gif" width="1" height="1" />
+</form>
+{% endcall %}
+
+{% call faq("formats", "Which traceroute formats are supported?") %}
 <p>The following formats are supported:</p>
 <ul>
 {% for parser_class, description, examples in parser_examples %}
@@ -50,21 +70,22 @@
   </div>
 {% endfor %}
 </ul>
+<p>If you want to <b>contribute</b> and improve the parser for a specific format or add a new one, you're welcome! Please visit the <a target="_blank" href="https://github.com/pierky/rich-traceroute/blob/master/CONTRIBUTING.md">GitHub page</a>.</p>
 {% endcall %}
 
-{% call faq("faq2", "retention", "How long are the enriched traceroutes kept?") %}
+{% call faq("retention", "How long are the enriched traceroutes kept?") %}
 <p>
   There is not an official guaranteed period of time. The traceroutes enriched using this tool can be deleted at any time for any reason. Do not rely on their availability.
 </p>
 {% endcall %}
 
-{% call faq("faq3", "external_sources", "How are the additional information gathered?") %}
+{% call faq("external_sources", "How are the additional information gathered?") %}
 <p>
   To enrich the traceroutes some external resources are queried. The tool uses <a href="https://stat.ripe.net/" target="_blank">RIPEstat</a> to gather information about the origin ASN of the IP addresses. <a href="https://www.peeringdb.com/" target="_blank">PeeringDB</a> is used to build a mapping of the prefixes used on the Internet Exchange peering LANs, to understand when the input represents a path that crosses an IXP. Simple DNS queries are used to perform reverse DNS resolution of the hosts.
 </p>
 {% endcall %}
 
-{% call faq("faq4", "numeric_format", "What level of accuracy is offered?") %}
+{% call faq("numeric_format", "What level of accuracy is offered?") %}
 <p>
   The tool and the web service are offered in best-effort, just to make it easier the interpretation of the paths represented by the traceroutes provided as the input.<br>
   <br>

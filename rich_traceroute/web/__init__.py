@@ -48,9 +48,11 @@ def create_app(*args):
 
 
 def inject_global_variables():
+    cfg = load_config()
     return dict(
         SOCKET_IO_DATA_EVENT=SOCKET_IO_DATA_EVENT,
         SOCKET_IO_ERROR_EVENT=SOCKET_IO_ERROR_EVENT,
         SOCKET_IO_ENRICHMENT_COMPLETED_EVENT=SOCKET_IO_ENRICHMENT_COMPLETED_EVENT,
-        CONFIG=load_config()
+        PUBLIC_SITE=cfg["web"].get("public_site", True),
+        CONFIG=cfg
     )

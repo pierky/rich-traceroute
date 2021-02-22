@@ -44,11 +44,6 @@ class WindowsTracertParser(LineByLineParser):
             rtts: List[float] = []
             missing_replies = 0
 
-            # Multiple IP (and their replies) can be found on
-            # the same line:
-            # 5  185.235.236.4 (185.235.236.4)  1.620 ms  1.228 ms
-            #    185.235.236.8 (185.235.236.8)  1.606 ms
-            # (same line)
             for part in parts[1:]:
                 val = part.replace(
                     "[", ""
@@ -83,6 +78,7 @@ class WindowsTracertParser(LineByLineParser):
                         )
 
                         rtts = []
+                        missing_replies = 0
 
                         continue
                     except:  # noqa: E722
@@ -92,7 +88,7 @@ class WindowsTracertParser(LineByLineParser):
                         if part == "<1":
                             rtt = 0
                         else:
-                            rtt = float(val)
+                            rtt = self.extract_rtt_from_str(val)
 
                         rtts.append(rtt)
 

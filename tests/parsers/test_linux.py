@@ -79,3 +79,19 @@ def test_parser_linux_5(parser_ctx):
             HopHost(host='2001:db8:1:2:2:42e5:0:1', loss=None, avg_rtt=21.297, min_rtt=21.287, max_rtt=21.306)],
         5: [],
     }
+
+
+def test_parser_linux_6(parser_ctx):
+    p = parser_ctx.parse_test_file(
+        "tests/data/traceroute/linux_6.txt",
+        tested_parser_class
+    )
+    assert p.hops == {
+        1: [HopHost(host='192.168.0.1', loss=None, avg_rtt=9.87, min_rtt=9.87, max_rtt=9.87),
+            HopHost(host='192.0.1.2', loss=None, avg_rtt=16.29, min_rtt=15.76, max_rtt=16.82)],
+        2: [HopHost(host='10.11.12.161', loss=None, avg_rtt=15.973, min_rtt=14.67, max_rtt=18.14)],
+        3: [HopHost(host='10.12.71.117', loss=None, avg_rtt=16.027, min_rtt=15.82, max_rtt=16.21)],
+        4: [HopHost(host='10.12.72.70', loss=None, avg_rtt=30.497, min_rtt=27.84, max_rtt=33.26)],
+        5: [HopHost(host='10.13.104.40', loss=None, avg_rtt=38.847, min_rtt=26.77, max_rtt=62.84)],
+        6: [HopHost(host='10.10.10.10', loss=None, avg_rtt=25.67, min_rtt=25.15, max_rtt=26.1)],
+    }

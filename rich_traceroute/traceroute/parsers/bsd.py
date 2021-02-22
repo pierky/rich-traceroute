@@ -81,7 +81,7 @@ class BSDParser(LineByLineParser):
                         pass
 
                     try:
-                        rtt = float(val)
+                        rtt = self.extract_rtt_from_str(val)
                         rtts.append(rtt)
                         continue
                     except:  # noqa: E722

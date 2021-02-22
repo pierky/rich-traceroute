@@ -1,0 +1,9 @@
+traceroute to 10.10.10.10 (10.10.10.10)...
+ 0 -  *  *  *
+ 1 192.168.0.1  9.87ms
+ 1 192.0.1.2  15.76ms  16.82ms
+ 2 name.example.com (10.11.12.161)  15.11ms  14.67ms  18.14ms
+ 3 name2.example.com (10.12.71.117)  15.82ms  16.05ms  16.21ms
+ 4 name3.example.com (10.12.72.70)  27.84ms  33.26ms  30.39ms
+ 5 name4.example.com (10.13.104.40)  26.93ms  62.84ms  26.77ms
+ 6 name5.example.com (10.10.10.10)  26.1ms  25.76ms  25.15ms

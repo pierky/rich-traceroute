@@ -1,0 +1,14 @@
+tracert 1.1.1.1
+
+Tracing route to one.one.one.one [1.1.1.1]
+over a maximum of 30 hops:
+
+  1     *        1 ms     1 ms  192.168.1.1
+  2    16 ms    16 ms    16 ms  10-11-12-2.net-example.com [10.11.12.2]
+  3    17 ms    42 ms    17 ms  10.12.13.14
+  4    24 ms    18 ms    16 ms  10.12.13.15
+  5    23 ms    26 ms    17 ms  192.0.2.1
+  6    17 ms    17 ms    18 ms  192.0.2.2
+  7    17 ms    17 ms    17 ms  one.one.one.one [1.1.1.1]
+
+Trace complete.

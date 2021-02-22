@@ -86,6 +86,15 @@ class BaseParser(ABC):
             for label in hostname.split('.')
         )
 
+    @staticmethod
+    def extract_rtt_from_str(s: str) -> float:
+        if s.endswith("ms"):
+            s = s[:-2].strip()
+        elif s.endswith("msec"):
+            s = s[:-4].strip()
+
+        return float(s)
+
     @abstractmethod
     def _parse(self):
         ...

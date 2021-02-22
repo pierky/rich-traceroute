@@ -55,3 +55,19 @@ def test_parser_win_tracert_3(parser_ctx):
         13: [HopHost(host='209.85.250.139', loss=None, avg_rtt=27.0, min_rtt=27.0, max_rtt=27.0)],
         14: [HopHost(host='216.58.200.99', loss=None, avg_rtt=27.0, min_rtt=27.0, max_rtt=27.0)],
     }
+
+
+def test_parser_win_tracert_4(parser_ctx):
+    p = parser_ctx.parse_test_file(
+        "tests/data/traceroute/win_tracert_4.txt",
+        tested_parser_class
+    )
+    assert p.hops == {
+        1: [HopHost(host='192.168.1.1', loss=None, avg_rtt=1.0, min_rtt=1.0, max_rtt=1.0)],
+        2: [HopHost(host='10.11.12.2', loss=None, avg_rtt=16.0, min_rtt=16.0, max_rtt=16.0)],
+        3: [HopHost(host='10.12.13.14', loss=None, avg_rtt=25.333, min_rtt=17.0, max_rtt=42.0)],
+        4: [HopHost(host='10.12.13.15', loss=None, avg_rtt=19.333, min_rtt=16.0, max_rtt=24.0)],
+        5: [HopHost(host='192.0.2.1', loss=None, avg_rtt=22.0, min_rtt=17.0, max_rtt=26.0)],
+        6: [HopHost(host='192.0.2.2', loss=None, avg_rtt=17.333, min_rtt=17.0, max_rtt=18.0)],
+        7: [HopHost(host='1.1.1.1', loss=None, avg_rtt=17.0, min_rtt=17.0, max_rtt=17.0)],
+    }

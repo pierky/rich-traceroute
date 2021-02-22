@@ -37,7 +37,10 @@ class LinuxParser(LineByLineParser):
 
             this_hop_n = int(hop_n_raw)
 
-            if this_hop_n != last_hop_n + 1:
+            if this_hop_n == 0:
+                continue
+
+            if this_hop_n not in (last_hop_n, last_hop_n + 1):
                 raise ParserError(
                     f"Unexpected hop n.: found {this_hop_n}, "
                     f"previous was {last_hop_n}"
@@ -48,7 +51,7 @@ class LinuxParser(LineByLineParser):
             # Extract IP address and latencies from the line
             last_ip: IPAddress
             ip_found = False
-            hostname: str
+            hostname: str = None
             hostname_found = False
             rtts: List[float] = []
             missing_replies = 0
@@ -83,20 +86,8 @@ class LinuxParser(LineByLineParser):
                 except:  # noqa: E722
                     pass
 
-                # Only check if the current part could be a hostname
-                # if it's not a float (thus, a RTT value).
                 try:
-                    float(val)
-                except:  # noqa: E722
-                    if self.looks_like_a_hostname(val) and not hostname_found:
-                        hostname = val
-
-                        hostname_found = True
-
-                        continue
-
-                try:
-                    rtt = float(val)
+                    rtt = self.extract_rtt_from_str(val)
 
                     rtts.append(rtt)
 
@@ -111,7 +102,7 @@ class LinuxParser(LineByLineParser):
                             this_hop_n,
                             (last_ip, [rtt])
                         )
-                    else:
+                    elif hostname_found:
                         self._add_host_info(
                             this_hop_n,
                             (hostname, [rtt])
@@ -119,7 +110,15 @@ class LinuxParser(LineByLineParser):
 
                     continue
                 except:  # noqa: E722
-                    pass
+                    # If it's not an IP and it's not a RTT, it could
+                    # be a hostname.
+
+                    if self.looks_like_a_hostname(val) and not hostname_found:
+                        hostname = val
+
+                        hostname_found = True
+
+                        continue
 
             if ip_found:
                 if not rtts and not missing_replies:

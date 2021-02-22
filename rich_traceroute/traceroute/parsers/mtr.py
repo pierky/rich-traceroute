@@ -46,6 +46,8 @@ class MTRParser(BaseParser):
         processing_hops = False
 
         for line in lines:
+            line = line.replace("^C", "")
+
             line = line.strip()
 
             if not line:

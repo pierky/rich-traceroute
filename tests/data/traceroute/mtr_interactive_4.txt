@@ -1,0 +1,17 @@
+ip-10-10-10-10 (0.0.0.0)                                                     Mon Mar  1 13:50:36 2021
+Keys:  Help   Display mode   Restart statistics   Order of fields   quit
+                                                             Packets               Pings
+ Host                                                      Loss%   Snt   Last   Avg  Best  Wrst StDev
+ 1. 192.0.2.1                                               0.0%  2357    0.7  15.2   0.4 208.0  28.3
+ 2. ???
+ 3. ???
+ 4. ???
+ 5. ???
+ 6. ???
+ 7. 10.111.8.129                                            0.0%  2357    0.2   1.1   0.1  45.3   3.7
+    10.111.10.1
+    host.example.com
+ 8. 192.22.8.129                                            0.0%  2357    0.3   1.2   0.2  45.4   3.8
+    192.22.10.1
+    host2.example.com
+ 9. 192.0.2.2                                              13.7%  2356   23.0  22.5  22.5  33.6   0.5

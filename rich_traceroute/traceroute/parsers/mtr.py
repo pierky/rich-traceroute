@@ -24,6 +24,27 @@ class MTRParser(BaseParser):
                 )
             )
 
+    def _add_host_to_previous_hop(self, host: str, hop_n: int) -> None:
+        if hop_n == 0:
+            raise ParserError(f"Additional host {host} found, but hop_n is zero")
+
+        if not self.hops[hop_n]:
+            raise ParserError(
+                f"Additional host {host} found for hop {hop_n}, "
+                "but no previous hosts found"
+            )
+
+        previous_hophost = self.hops[hop_n][0]
+
+        self.hops[hop_n].append(
+            HopHost(
+                **{
+                    **previous_hophost._asdict(),
+                    **{"host": host}
+                }
+            )
+        )
+
     @staticmethod
     def _get_hop_n(line: str) -> Tuple[int, str]:
 
@@ -45,8 +66,19 @@ class MTRParser(BaseParser):
 
         processing_hops = False
 
+        last_hop_n = 0
+
         for line in lines:
             line = line.replace("^C", "")
+
+            # Lines which show additional hosts from which a reply
+            # was received for the same hop that was previously
+            # processed.
+            #
+            #  7. 192.168.8.129      0.0%  2357    0.2   1.1   0.1  45.3   3.7
+            #     192.168.10.1
+            #     192.168.9.65
+            seems_to_be_a_continuation_line = line[:4].strip() == ""
 
             line = line.strip()
 
@@ -68,12 +100,24 @@ class MTRParser(BaseParser):
 
             line = line.replace("(waiting for reply)", "???")
 
-            #  1.|-- 192.168.1.254              0.0%     2    3.8   6.4   3.8   9.1   3.7
-            #  2.|-- 10.1.131.181               0.0%     2    9.0   9.2   9.0   9.5   0.4
+            if seems_to_be_a_continuation_line:
+                this_hop_n = last_hop_n
 
-            this_hop_n, line_info = self._get_hop_n(line)
+                fields = line.split()
 
-            fields = line_info.split()
+                host = fields[0]
+
+                self._add_host_to_previous_hop(host, this_hop_n)
+
+                continue
+            else:
+
+                #  1.|-- 192.168.1.254              0.0%     2    3.8   6.4   3.8   9.1   3.7
+                #  2.|-- 10.1.131.181               0.0%     2    9.0   9.2   9.0   9.5   0.4
+
+                this_hop_n, line_info = self._get_hop_n(line)
+
+                fields = line_info.split()
 
             # Parsing the host
             # --------------------------
@@ -126,6 +170,8 @@ class MTRParser(BaseParser):
                 rtt = float(raw_rtt)
 
                 host_attrs[what_we_are_parsing] = rtt
+
+            last_hop_n = this_hop_n
 
             self._add_hop_host(this_hop_n, host, **host_attrs)
 

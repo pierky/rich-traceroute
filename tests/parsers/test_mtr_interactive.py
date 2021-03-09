@@ -52,3 +52,25 @@ def test_parser_mtr_interactive_3(parser_ctx):
         4: [HopHost(host='10.254.0.217', loss=0.0, avg_rtt=10.0, min_rtt=9.6, max_rtt=10.3)],
         5: [],
     }
+
+
+def test_parser_mtr_interactive_4(parser_ctx):
+    p = parser_ctx.parse_test_file(
+        "tests/data/traceroute/mtr_interactive_4.txt",
+        tested_parser_class
+    )
+    assert p.hops == {
+        1: [HopHost(host='192.0.2.1', loss=0.0, avg_rtt=15.2, min_rtt=0.4, max_rtt=208.0)],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
+        7: [HopHost(host='10.111.8.129', loss=0.0, avg_rtt=1.1, min_rtt=0.1, max_rtt=45.3),
+            HopHost(host='10.111.10.1', loss=0.0, avg_rtt=1.1, min_rtt=0.1, max_rtt=45.3),
+            HopHost(host='host.example.com', loss=0.0, avg_rtt=1.1, min_rtt=0.1, max_rtt=45.3)],
+        8: [HopHost(host='192.22.8.129', loss=0.0, avg_rtt=1.2, min_rtt=0.2, max_rtt=45.4),
+            HopHost(host='192.22.10.1', loss=0.0, avg_rtt=1.2, min_rtt=0.2, max_rtt=45.4),
+            HopHost(host='host2.example.com', loss=0.0, avg_rtt=1.2, min_rtt=0.2, max_rtt=45.4)],
+        9: [HopHost(host='192.0.2.2', loss=13.7, avg_rtt=22.5, min_rtt=22.5, max_rtt=33.6)],
+    }
